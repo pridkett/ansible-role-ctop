@@ -1,0 +1,5 @@
+---
+# defaults file for ctop
+#
+ctop_version: '0.7.4'
+ctop_download_dir: "{{ x_ansible_download_dir | default(ansible_env.HOME + '/.ansible/tmp/downloads') }}"

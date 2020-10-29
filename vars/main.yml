@@ -1,0 +1,20 @@
+---
+# vars file for ctop
+
+# Dir where ctop should be installed
+ctop_install_dir: '/usr/local/bin'
+
+# Path where ctop should be installed
+ctop_install_path: '{{ ctop_install_dir }}/ctop'
+
+# Mirror to download the ctop from
+ctop_mirror: 'https://github.com/bcicen/ctop/releases/download/v{{ ctop_version }}'
+
+# The OS of the ctop redistributable
+ctop_os: '{{ ansible_system | lower }}'
+
+# The CPU architecture of the ctop redistributable
+ctop_architecture: '{% if ansible_architecture == "armv7l" %}arm{% else %}{{ ansible_architecture }}{% endif %}'
+
+# File name of the ctop release
+ctop_release_filename: 'ctop-{{ ctop_version }}-{{ ctop_os }}-{{ ctop_architecture }}'

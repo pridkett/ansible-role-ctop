@@ -1,0 +1,51 @@
+---
+# tasks file for ctop
+#
+
+- name: install ctop (homebrew)
+  homebrew:
+    name: ctop
+    state: latest
+  when: ansible_os_family | lower == 'darwin'
+  tags:
+    - ctop
+    - install
+    - pkg
+    - pkg-install
+    - tmux-install
+
+- name: create download directory (linux)
+  file:
+    state: directory
+    mode: 'u=rwx,go=rx'
+    dest: '{{ ctop_download_dir }}'
+  when: ansible_system | lower == 'linux'
+
+- name: download ctop (linux)
+  get_url:
+    url: '{{ ctop_mirror }}/{{ ctop_release_filename }}'
+    dest: '{{ ctop_download_dir }}/{{ ctop_release_filename }}'
+      # TODO: add in multiple checksums for different architectures
+      # checksum: 'sha256:{{ ctop_redis_sha256sum }}'
+    mode: 'u=rw,go=r'
+  when: ansible_system | lower == 'linux'
+
+- name: create the ctop installation dir (linux)
+  become: yes
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: 'u=rwx,go=rx'
+    dest: '{{ ctop_install_dir }}'
+  when: ansible_system | lower == 'linux'
+
+- name: install ctop (linux)
+  become: yes
+  copy:
+    src: '{{ ctop_download_dir }}/{{ ctop_release_filename }}'
+    remote_src: yes
+    dest: '{{ ctop_install_path }}'
+    force: yes
+    mode: 'u=rwx,go=rx'
+  when: ansible_system | lower == 'linux'
