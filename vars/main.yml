@@ -13,8 +13,5 @@ ctop_mirror: 'https://github.com/bcicen/ctop/releases/download/v{{ ctop_version 
 # The OS of the ctop redistributable
 ctop_os: '{{ ansible_system | lower }}'
 
-# The CPU architecture of the ctop redistributable
-ctop_architecture: '{% if ansible_architecture == "armv7l" %}arm{% else %}{% if ansible_architecture == "x86_64" %}amd64{% else %}{{ ansible_architecture }}{% endif %}{% endif %}'
-
 # File name of the ctop release
 ctop_release_filename: 'ctop-{{ ctop_version }}-{{ ctop_os }}-{{ ctop_architecture }}'

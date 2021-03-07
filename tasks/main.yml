@@ -2,6 +2,18 @@
 # tasks file for ctop
 #
 
+- name: Map system architecture to binary
+  with_first_found:
+    - '../vars/architecture/{{ ansible_architecture | lower }}.yml'
+    - ../vars/architecture/default.yml
+  include_vars: '{{ item }}'
+
+- name: Load sha256 sums
+  with_first_found:
+    - '../vars/versions/{{ ctop_release_filename }}.yml'
+    - '../vars/versions/default.yml'
+  include_vars: '{{ item }}'
+
 - name: install ctop (homebrew)
   homebrew:
     name: ctop
@@ -25,8 +37,7 @@
   get_url:
     url: '{{ ctop_mirror }}/{{ ctop_release_filename }}'
     dest: '{{ ctop_download_dir }}/{{ ctop_release_filename }}'
-      # TODO: add in multiple checksums for different architectures
-      # checksum: 'sha256:{{ ctop_redis_sha256sum }}'
+    checksum: 'sha256:{{ ctop_redis_sha256sum }}'
     mode: 'u=rw,go=r'
   when: ansible_system | lower == 'linux'
 
